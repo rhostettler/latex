@@ -1,0 +1,26 @@
+% Document class, choose one according to the paper's page size
+\documentclass[a4paper,oneside,hyperref]{article}
+%\documentclass[letter,oneside,hyperref]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{parapub}
+\parapubsetup{
+    journal={},         % Journal name goes here
+    citationkey={},     % The key for this article in your .bib file
+    doi={},             % The DOI for this article (only for accepted/published)
+    copyright={},       % Copyright notice, use a predefined one (e.g. \IEEECopyrightNotice) or a custom one
+    published           % Status of the paper (submitted, accepted, published)
+}
+
+\title{<Your Paper Title Here>}
+\author{<Author Names Here>}
+\date{} % Leave empty
+
+\begin{document}
+
+\bibliographystyle{IEEEtran}  % Change to your preferred style
+\nobibliography{}             % Add your bibliography file here
+\makecoverpage                % Generates the cover page
+\includepdf[pages=-]{<path to pdf>} % Include the original PDF here. DO NOT use the publisher's published PDF
+
+\end{document}
+

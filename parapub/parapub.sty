@@ -1,158 +1,88 @@
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Parallel Publishing Toolbox
-%% ===========================
-%% 
-%% TODO
-%%   * Can we extract the document information such as title and authors from
-%%     the article (consistently so that it works with IEEEtran, ifacconf,
-%%     etc.)?
-%%   * Use key-value pairs for the package options
-%%   * Move to git
+%% Parallel Publishing Toolbox %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% This provides some simple commands for parallel-publishing scientific papers
+%% according to the rules set out by the publishers. That is, it provides an 
+%% easy way to create a cover page which includes the necessary copyright and
+%% citation information such that the paper can be posted on a personal or
+%% institutional homepage.
 %%
-%% parapub.sty -- Version 1.0 -- 2014-04-09
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Package options:
+%%   hyperref   Disables hyperref
+%% 
+%% parapub.sty -- Version 2.0 -- 2016-10-12
+%% Roland Hostettler
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Identify ourselves %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% LaTeX version requirement
+%% Identify ourselves %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{parapub}[2016/10/12 v2.0 Parallel Publishing Toolbox]
 
-% Package name and info
-\ProvidesPackage{parapub}[2014/04/08 v1.0 Parallel Publishing Toolbox]
+%% Mandatory dependencies %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{keyval}    % Used for key-value pairs in \parapubsetup
+\RequirePackage{parskip}   % Neat paragraph skipping
+\RequirePackage{microtype} % Improved linebreaks
+\RequirePackage{etoolbox}  % Used for if/else constructs
+\RequirePackage{pdfpages}  % Used to include the article PDF
+\RequirePackage{bibentry}  % For the full citation
 
-%% Globally required packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Used for key-value pairs in the \disclaimer command
-\RequirePackage{keyval}
-
-% Used for if/else constructs
-\RequirePackage{etoolbox}
-
-% For the full citation
-\RequirePackage{bibentry}
-\nobibliography*
-
-%% Package Options %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Should we use hyperref?
+%% Package Options %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Should we use hyperref? Disabled by default, enabled by using the hyperref 
+% package option
 \newtoggle{hyperref}
-\toggletrue{hyperref}
-\DeclareOption{nohyperref}{
-	\togglefalse{hyperref}
-}
+\togglefalse{hyperref}
+\DeclareOption{hyperref}{\toggletrue{hyperref}}
 
 % Process Options
 \ProcessOptions
 
-%% Enable or disable hyperref
-\iftoggle{hyperref}{%
-	\RequirePackage[plainpages=false,pdfpagelabels]{hyperref}
-	\hypersetup{
-	%    bookmarks=true,         		% show bookmarks bar?
-		 unicode=false,          		% non-Latin characters bookmarks
-		 pdftoolbar=true,        		% show Acrobat's toolbar?
-		 pdfmenubar=true,        		% show Acrobat's menu?
-		 pdffitwindow=false,     		% window fit to page when opened
-		 pdfstartview={FitH},    		% fits the width of the page to the window
-		 pdftitle={},                     % title
-		 pdfauthor={},	% author
-		 pdfsubject={},   				% subject of the document
-		 pdfcreator={pdfTeX},			% creator of the document
-		 pdfproducer={}, 				% producer of the document
-		 pdfkeywords={},					% list of keywords
-		 pdfnewwindow=true,  			% links in new window
-		 colorlinks=true,				% false: boxed links; true: colored links
-		 linkcolor=black,    			% color of internal links
-		 citecolor=black,    			% color of links to bibliography
-		 filecolor=black,    			% color of file links
-		 urlcolor=black,      			% color of external links
-	}
-}{%
-	\newcommand{\href}[2]{#2}
-}
 
+%% Cover page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% These commands are used to create the frontpage that is prepended to the. It
+%% includes the paper title, authors, a full citation, copyright notice, DOI, 
+%% and citation instructions.
+%%
+%% There are two commands to be used. The first one is \parapubsetup which is
+%% preferably called in the preamble of the document. It sets the paper 
+%% information (except for the title and author which are set with the default 
+%% LaTeX \title and \author commands). \papersetup requires the following 
+%% options:
+%%
+%%  journal     The journal (or conference) where the paper is (to be) 
+%%              published,
+%%  citationkey The key of the citation for the paper in the bibliography for
+%%              including a full citation on the cover page,
+%%  doi         The digital object identifier of the paper (accepted/published)
+%%  copyright   A copyright notice, either your own or a predefined one (see 
+%%              below),
+%%
+%% and one of
+%%   
+%%  preprint    for preprints,
+%%  accepted    for accepted papers,
+%%  published   for published papers.
+%%
+%% The second command is '\makecoverpage'. This will typeset the complete cover
+%% page.
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Parallel Publishing Disclaimer
-%% ==============================
-%%
-%% Here, we provide a command to create a frontpage that is prepended to the
-%% paper which states the paper title, authors, a full citation, copyright 
-%% notice, DOI, and citing instructions.
-%%
-%% The command is '\disclaimer' and it takes one argument with a list of key-
-%% value pairs. The mandatory keys are:
-%%
-%%   * title      The paper title
-%%   * author		The list of authors
-%%   * journal    the journal (or conference) the paper was submitted to
-%%
-%% To chose the type of publication, that is, wheter it is a preprint or an
-%% accepted/published paper either set
-%%
-%%   * preprint   For a submitted paper (preprint) or
-%%   * published  for an accepted/published paper
-%%
-%% If the manuscript is published or accepted for publication, you also must set
-%% the following keys:
-%%
-%%   * citekey    A key to the citation
-%%   * doi        The DOI
-%%   * copyright  The copyright notice
-%%
-%% Examples:
-%%
-%%   1. A preprint of a submitted paper:
-%%
-%%      \disclaimer{title=My Paper,author=John Doe,journal=Transactions on 
-%%      Important Science,submitted}
-%%
-%%   2. A parallel-publishing version of an accepted/published paper:
-%%
-%%      \disclaimer{title=My Paper,author=John Doe,journal=Transactions on 
-%%      Important Science,citekey=Doe2014,doi=ZZZ/YYY,copyright={\copyright\
-%%      2014 A Society.}}
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% Define all the keys %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Paper title
-\newcommand{\papertitle}[1]{
-	\def\thepapertitle{#1}
-}
-\papertitle{}
-\define@key{paper}{title}{\papertitle{#1}}
-
-% Paper authors
-\newcommand{\paperauthor}[1]{
-	\def\thepaperauthor{#1}
-}
-\paperauthor{}
-\define@key{paper}{author}{\paperauthor{#1}}
-
+% Define the keys
 % Paper journal/conference
-\newcommand{\paperjournal}[1]{
-	\def\thepaperjournal{#1}
-}
-\paperjournal{}
-\define@key{paper}{journal}{\paperjournal{#1}}
+\newcommand{\setjournal}[1]{\def\thejournal{#1}}
+\setjournal{}
+\define@key{paper}{journal}{\setjournal{#1}}
 
 % Paper cite key
-\newcommand{\paperkey}[1]{
-	\def\thepaperkey{#1}
-}
-\paperkey{}
-\define@key{paper}{citekey}{\paperkey{#1}}
+\newcommand{\setcitationkey}[1]{\def\thecitationkey{#1}}
+\setcitationkey{}
+\define@key{paper}{citationkey}{\setcitationkey{#1}}
 
 % DOI
-\newcommand{\paperdoi}[1]{
-	\def\thepaperdoi{#1}
-}
-\paperdoi{}
-\define@key{paper}{doi}{\paperdoi{#1}}
+\newcommand{\setdoi}[1]{\def\thedoi{#1}}
+\setdoi{}
+\define@key{paper}{doi}{\setdoi{#1}}
 
 % Copyright
-\newcommand{\papercopyright}[1]{
-	\def\thepapercopyright{#1}
-}
-\papercopyright{}
-\define@key{paper}{copyright}{\papercopyright{#1}}
+\newcommand{\setcopyright}[1]{\def\thecopyright{#1}}
+\setcopyright{}
+\define@key{paper}{copyright}{\setcopyright{#1}}
 
 % Pre-print (default) or published
 \newtoggle{preprint}
@@ -165,81 +95,66 @@
 \define@key{paper}{accepted}[true]{\toggletrue{accepted}\togglefalse{preprint}}
 \define@key{paper}{published}[true]{\toggletrue{published}\togglefalse{preprint}}
 
-%% Define the \disclaimer command itself %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\disclaimer}[1]{%
-	% Process all the keys
-	\setkeys{paper}{#1}
-	%
-	% Make it a clean page and set the pagenumbering to lower case romanin order
-	% to retain the true article page numbering
-	\pagenumbering{roman}
+% The command for setting the keys
+\newcommand{\parapubsetup}[1]{\setkeys{paper}{#1}}
+
+% Generates the cover page
+\newcommand{\makecoverpage}[0]{%
+    % Add the title
+    \maketitle
 	\thispagestyle{empty}
-    %
-	% Put all the info in a minipage that spans the whole text width so that it
-	% doesn't create problems with two-column layouts	
-	\begin{minipage}{\textwidth}
-		% Use the 'large' font
-		\large
-	    %
-		% Add title & authors
-		\begin{center}
-			{\Huge \bfseries\thepapertitle}
+
+	% Add the disclaimer
+    \iftoggle{preprint}{%
+        % Preprint
+        % We just print the information
+        This is a pre-print of a paper submitted for consideration in \textit{\thejournal}.%
+    }{%
+        \iftoggle{accepted}{%
+            % Accepted paper
+            % Information
+            This is a pre-print of a paper accepted for publication in \textit{\thejournal}. When citing this work, you must always cite the original article:
+        }{}
+        \iftoggle{published}{%
+            This is a post-print of a paper published in \textit{\thejournal}. When citing this work, you must always cite the original article:
+        }{}
 		
-			\vspace{2em}
-			\thepaperauthor
-		\end{center}
-	    %
-		\vspace{4em}
-		\iftoggle{preprint}{%
-			% Preprint
-			% We just print the information
-			\noindent This is a pre-print of a paper submitted for consideration in \thepaperjournal.%
-		}{%
-    		\iftoggle{accepted}{%
-    			% Accepted paper
-	    		% Information
-	    		\noindent This is a pre-print of a paper accepted for publication in \textit{\thepaperjournal}. When citing this work, you must always cite the original article:%
-    		}{}
-    		\iftoggle{published}{%
-	    		\noindent This is a post-print of a paper published in \textit{\thepaperjournal}. When citing this work, you must always cite the original article:%
-	    	}{}
-		
-			% Full citation
-			\vspace{2em}
-			\begin{center}
-			    \begin{minipage}{0.9\columnwidth}
-        			\noindent\bibentry{\thepaperkey}
-    			\end{minipage}
-    		\end{center}
+        % Full citation
+        \begin{center}
+            \begin{minipage}{0.9\columnwidth}
+                \vspace{2em}
+                \bibentry{\thecitationkey}
+            \end{minipage}
+        \end{center}
 			
-			% DOI (incl. link if applicable)
-			\iftoggle{published}{%
-			    \vspace{2em}
-			    \noindent \textbf{DOI}:\\[\parskip]
-			    \href{http://dx.doi.org/\thepaperdoi}{\thepaperdoi}
-		    }{}
+        % DOI (incl. link if applicable)
+        \iftoggle{published}{%
+            \vspace{2em}
+            \textbf{DOI}
+
+            \href{http://dx.doi.org/\thedoi}{\thedoi}
+        }{}
 	
-			% Copyright notice
-			\vspace{2em}
-			\noindent \textbf{Copyright:}\\[\parskip]
-			\thepapercopyright
-		}
-	\end{minipage}
-    %
-	\clearpage%
-	\pagenumbering{arabic}%
+        % Copyright notice
+        \vspace{2em}
+        \textbf{Copyright}
+
+        \thecopyright
+    }
+}
+
+%% Optional dependencies %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% hyperref (disabled by default; needs to be after the above for some reason
+\iftoggle{hyperref}{%
+    \makeatletter\let\saved@bibitem\@bibitem\makeatother
+	\RequirePackage[hidelinks]{hyperref}
+    \makeatletter\let\@bibitem\saved@bibitem\makeatother
+}{%
+	\newcommand{\href}[2]{#2}
 }
 
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Predefined Copyright Disclaimers
-%% ================================
-%%	
-%% \IEEECopyrightNotice -- IEEE's standard copyright disclaimer
-%% \IFACCopyrightNotice -- IFAC's standard copyright disclaimer
-%% 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%% Predefined Copyright Disclaimers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % IEEE standard copyright disclaimer
 \newcommand{\IEEECopyrightNotice}[0]{%
 	\copyright\ \the\year\ IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for resale or redistribution to servers or lists, or reuse of any copyrighted component of this work in other works.
@@ -250,8 +165,5 @@
     \copyright\ \the\year\ IFAC. This is the author's version of a work that was accepted for publication in ifac-papersonline.net. Changes resulting from the publishing process, such as peer review, editing, corrections, structural formatting, and other quality control mechanisms may not be reflected in this document. Changes may have been made to this work since it was submitted for publication. A definitive version was subsequently published in ifac-papersonline.net.
 }
 
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% EOF
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% EOF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
