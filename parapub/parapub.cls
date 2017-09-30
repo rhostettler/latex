@@ -10,41 +10,53 @@
 % 
 % parapub.sty -- Version 3.0 -- 2017-09-30 -- Roland Hostettler
 
-% Class & options definitions
-% ---------------------------
+% TODO:
+%   * Right now, the output is not sensible when none of the keys are set.
+
+% Class definition
+% ----------------
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{parapub}[2017/09/30 v3.0 Parallel Publishing Toolbox]
 
-\newtoggle{hyperref}
-\togglefalse{hyperref}
+% Early Dependencies
+% ------------------
+\RequirePackage{etoolbox}  % Used for if/else constructs
+
+% Class options
+% -------------
+\newtoggle{hyperref}       % false by default
 \DeclareOption{hyperref}{\toggletrue{hyperref}}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions
+\LoadClass{article}
 
-% Dependencies
-% ------------
+% Late Dependencies
+% -----------------
+\RequirePackage{geometry}
 \RequirePackage{keyval}    % Used for key-value pairs in \parapubsetup
 \RequirePackage{parskip}   % Neat paragraph skipping
-\RequirePackage{microtype} % Improved linebreaks
-\RequirePackage{etoolbox}  % Used for if/else constructs
+\RequirePackage{microtype} % Improved line breaks
 \RequirePackage{pdfpages}  % Used to include the article PDF
 \RequirePackage{bibentry}  % For the citation
 
+% Optional dependencies
+% ---------------------
+% hyperref (disabled by default; needs to be after the above for some reason
+\AtBeginDocument{
+    \iftoggle{hyperref}{%
+        \makeatletter\let\saved@bibitem\@bibitem\makeatother%
+    	\RequirePackage[hidelinks]{hyperref}%
+        \makeatletter\let\@bibitem\saved@bibitem\makeatother%
+    }{
+	    \newcommand{\href}[2]{#2}
+    }
+}
+
 % Cover Page
 % ----------
-% The cover page is created by simply invoking the \article command. 
-% 
-% DESCRIBE OPTIONS HERE
-% 
-% These commands are used to create the frontpage that is prepended to the. It
+% The cover page is created by simply invoking the \article command. It
 % includes the paper title, authors, a full citation, copyright notice, DOI, 
-% and citation instructions.
-%
-% There are two commands to be used. The first one is \parapubsetup which is
-% preferably called in the preamble of the document. It sets the paper 
-% information (except for the title and author which are set with the default 
-% LaTeX \title and \author commands). \papersetup requires the following 
-% options:
+% and citation instructions. The following options can be set:
 %
 %  journal     The journal (or conference) where the paper is (to be) 
 %              published,
@@ -59,114 +71,133 @@
 %  preprint    for preprints,
 %  accepted    for accepted papers,
 %  published   for published papers.
-%
-% The second command is '\makecoverpage'. This will typeset the complete cover
-% page.
 
-% Define the keys
-% Paper journal/conference
+% Journal/conference
 \newcommand{\setjournal}[1]{\def\thejournal{#1}}
 \setjournal{}
 \define@key{paper}{journal}{\setjournal{#1}}
 
-% Paper cite key
+% Citation key
 \newcommand{\setcitationkey}[1]{\def\thecitationkey{#1}}
 \setcitationkey{}
 \define@key{paper}{citationkey}{\setcitationkey{#1}}
 
 % DOI
+\newtoggle{hasdoi}
+\togglefalse{hasdoi}
 \newcommand{\setdoi}[1]{\def\thedoi{#1}}
 \setdoi{}
-\define@key{paper}{doi}{\setdoi{#1}}
+\define@key{paper}{doi}{%
+    \setdoi{#1}%
+    \toggletrue{hasdoi}%
+}
 
 % Copyright
 \newcommand{\setcopyright}[1]{\def\thecopyright{#1}}
 \setcopyright{}
 \define@key{paper}{copyright}{\setcopyright{#1}}
 
-% Pre-print (default) or published
+% Pre-print (default), accepted, or published
 \newtoggle{preprint}
 \toggletrue{preprint}
-\newtoggle{accepted}
-\togglefalse{accepted}
-\newtoggle{published}
-\togglefalse{published}
-\define@key{paper}{preprint}[true]{\toggletrue{preprint}}
-\define@key{paper}{accepted}[true]{\toggletrue{accepted}\togglefalse{preprint}}
-\define@key{paper}{published}[true]{\toggletrue{published}\togglefalse{preprint}}
+\newtoggle{accepted}    % false by default
+\newtoggle{published}   % false by default
+\define@key{paper}{preprint}[true]{%
+    \toggletrue{preprint}%
+    \togglefalse{accepted}%
+    \togglefalse{published}%
+}
+\define@key{paper}{accepted}[false]{%
+    \togglefalse{preprint}%
+    \toggletrue{accepted}%
+    \togglefalse{published}%
+}
+\define@key{paper}{published}[false]{%
+    \togglefalse{preprint}%
+    \togglefalse{accepted}%
+    \toggletrue{published}%
+}
 
-% The command for setting the keys
-\newcommand{\parapubsetup}[1]{\setkeys{paper}{#1}}
+% Generates the complete cover page
+\newcommand{\article}[2][]{
+    % Options
+    \setkeys{paper}{#1}
 
-% Generates the cover page
-\newcommand{\makecoverpage}[0]{%
-    % Add the title
+    % Title
+    \date{}
     \maketitle
 	\thispagestyle{empty}
 
-	% Add the disclaimer
+	% Disclaimer
     \iftoggle{preprint}{%
         % Preprint
-        % We just print the information
-        This is a pre-print of a paper submitted for consideration in \textit{\thejournal}.%
-    }{%
-        \iftoggle{accepted}{%
-            % Accepted paper
-            % Information
-            This is a pre-print of a paper accepted for publication in \textit{\thejournal}. When citing this work, you must always cite the original article:
-        }{}
-        \iftoggle{published}{%
-            This is a post-print of a paper published in \textit{\thejournal}. When citing this work, you must always cite the original article:
-        }{}
-		
-        % Full citation
-        \begin{center}
-            \begin{minipage}{0.9\columnwidth}
-                \vspace{2em}
-                \bibentry{\thecitationkey}
-            \end{minipage}
-        \end{center}
-			
-        % DOI (incl. link if applicable)
-        \iftoggle{published}{%
-            \vspace{2em}
-            \textbf{DOI}
+        This is a pre-print of a paper submitted for consideration in %
+        \textit{\thejournal}.%
+    }{}%
+    \iftoggle{accepted}{%
+        % Accepted paper
+        This is a pre-print of a paper accepted for publication in %
+        \textit{\thejournal}. When citing this work, you must always cite the %
+        original article:%
+    }{}%
+    \iftoggle{published}{%
+        This is a post-print of a paper published in \textit{\thejournal}. %
+        When citing this work, you must always cite the original article:
+    }{}%
 
-            \href{http://dx.doi.org/\thedoi}{\thedoi}
-        }{}
+    % Citation
+    \begin{center}
+        \begin{minipage}{0.9\columnwidth}
+            \vspace*{2em}
+            \bibentry{\thecitationkey}
+        \end{minipage}
+    \end{center}
+
+    % DOI (incl. link if applicable)
+    \iftoggle{hasdoi}{%
+        \vspace*{2em}
+        \textbf{DOI:}
+
+        \href{http://dx.doi.org/\thedoi}{\thedoi}
+    }{}
 	
-        % Copyright notice
-        \vspace{2em}
-        \textbf{Copyright}
+    % Copyright notice
+    \vspace*{2em}
+    \textbf{Copyright:}
 
-        \thecopyright
-    }
-}
+    \thecopyright
 
-%% Optional dependencies %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% hyperref (disabled by default; needs to be after the above for some reason
-\iftoggle{hyperref}{%
-    \makeatletter\let\saved@bibitem\@bibitem\makeatother
-	\RequirePackage[hidelinks]{hyperref}
-    \makeatletter\let\@bibitem\saved@bibitem\makeatother
-}{%
-	\newcommand{\href}[2]{#2}
+    % Article
+    \includepdf[pages=-]{#2}
 }
 
 % Copyright Disclaimers
 % ---------------------
-% IEEE standard copyright disclaimer
+% IEEE
 \newcommand{\IEEECopyrightNotice}[0]{%
-	Copyright \copyright\ \the\year\ IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for resale or redistribution to servers or lists, or reuse of any copyrighted component of this work in other works.
+	Copyright \the\year\ IEEE. Personal use of this material is permitted. 
+    Permission from IEEE must be obtained for all other uses, in any current 
+    or future media, including reprinting/republishing this material for 
+    advertising or promotional purposes, creating new collective works, for 
+    resale or redistribution to servers or lists, or reuse of any copyrighted 
+    component of this work in other works.
 }
 
-% IFAC standard copyright disclaimer
+% IFAC
 \newcommand{\IFACCopyrightNotice}[0]{%
-    Copyright \copyright\ \the\year\ IFAC. This is the author's version of a work that was accepted for publication in \href{http://ifac-papersonline.net}{ifac-papersonline.net}. Changes resulting from the publishing process, such as peer review, editing, corrections, structural formatting, and other quality control mechanisms may not be reflected in this document. Changes may have been made to this work since it was submitted for publication. A definitive version was subsequently published in ifac-papersonline.net.
+    Copyright \the\year\ IFAC. This is the author's version of a work that was 
+    accepted for publication in \href{http://ifac-papersonline.net}{ifac-papersonline.net}. 
+    Changes resulting from the publishing process, such as peer review, 
+    editing, corrections, structural formatting, and other quality control 
+    mechanisms may not be reflected in this document. Changes may have been 
+    made to this work since it was submitted for publication. A definitive 
+    version was subsequently published in \href{http://ifac-papersonline.net}{ifac-papersonline.net}.
 }
 
-% EUSIPCO copyright disclaimer
+% EUSIPCO
 \newcommand{\EUSIPCOCopyrightNotice}[0]{%
-    Copyright \copyright\ \the\year\ EURASIP. First published in the Proceedings of the European Signal Processing Conference (EUSIPCO-\the\year) in \the\year, published by EURASIP.
+    Copyright \the\year\ EURASIP. First published in the Proceedings of the 
+    European Signal Processing Conference (EUSIPCO-\the\year) in \the\year, 
+    published by EURASIP.
 }
 

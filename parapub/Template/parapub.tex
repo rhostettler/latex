@@ -1,26 +1,29 @@
-% Document class, choose one according to the paper's page size
-\documentclass[a4paper,oneside,hyperref]{article}
-%\documentclass[letter,oneside,hyperref]{article}
+% Document class, choose one according to the paper's page size. Remove the 
+% 'hyperref' parameter if you don't want clickable links.
+\documentclass[a4paper,oneside,hyperref]{parapub}
+%\documentclass[letter,oneside,hyperref]{parapub}
 \usepackage[utf8]{inputenc}
-\usepackage{parapub}
-\parapubsetup{
-    journal={},         % Journal name goes here
-    citationkey={},     % The key for this article in your .bib file
-    doi={},             % The DOI for this article (only for accepted/published)
-    copyright={},       % Copyright notice, use a predefined one (e.g. \IEEECopyrightNotice) or a custom one
-    published           % Status of the paper (submitted, accepted, published)
-}
 
-\title{<Your Paper Title Here>}
-\author{<Author Names Here>}
-\date{} % Leave empty
+% Add your paper title and authors here
+\title{PAPER TITLE}
+\author{AUTHOR A, AUTHOR B, AUTHOR C}
 
 \begin{document}
 
-\bibliographystyle{IEEEtran}  % Change to your preferred style
-\nobibliography{}             % Add your bibliography file here
-\makecoverpage                % Generates the cover page
-\includepdf[pages=-]{<path to pdf>} % Include the original PDF here. DO NOT use the publisher's published PDF
+% Bibliography: Choose your preferred style and add your bibliography, which
+% includes the bibliography entry of your article.
+\bibliographystyle{IEEEtran}
+\nobibliography{rolandh}
+
+% Include the PDF here. Use e.g. your camera ready version, DO NOT use the 
+% publisher's PDF!
+\article[
+    journal={},         % The journal's/conference's name
+    citationkey={},     % The citation key for this article in your .bib file specified above
+    doi={},             % The DOI for this article (optional but highly recommended for published)
+    copyright={},       % Copyright notice, use a predefined one (e.g. \IEEECopyrightNotice) or a custom one
+    published           % Status of the paper (submitted, accepted, or published)
+]{FILE.PDF}
 
 \end{document}
 
