@@ -1,0 +1,101 @@
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Extra Math Symbols
+%% ==================
+%%  
+%%
+%% mathsym.sty -- Version 1.0 -- 2016-07-08
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Identify ourselves %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LaTeX version requirement
+\NeedsTeXFormat{LaTeX2e}
+
+% Package name and info
+\ProvidesPackage{mathsym}[2016/02/13 v1.0 Math Symbols]
+
+%% Globally required packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+
+%% Package Options %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Process Options
+\ProcessOptions
+
+%% Numbering tricks %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Use this in an align* or gather* environment to add a number for any given 
+% line
+\newcommand{\numberthis}[0]{\addtocounter{equation}{1}\tag{\theequation}}
+
+%% Colored boxes 
+%\definecolor{myblue}{rgb}{.8, .8, 1}
+%\RequirePackage{xcolor,empheq}
+%\newcommand*\mathbox[1]{%
+%    \fcolorbox{black}{white}{\hspace{0.6em}#1\hspace{0.6em}}%
+%}
+
+%% Probability density functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\N}[0]{\ensuremath{\mathcal{N}}}
+\newcommand{\CN}[0]{\ensuremath{\mathcal{CN}}}
+\newcommand{\Cat}[0]{\ensuremath{\mathcal{C}}}
+\newcommand{\B}[0]{\ensuremath{\mathcal{B}}}
+\newcommand{\GP}[0]{\ensuremath{\mathcal{GP}}}
+\newcommand{\St}[0]{\ensuremath{\mathrm{St}}}
+
+%% Matrix operators %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\blkdiag}{blkdiag}
+\DeclareMathOperator{\tr}{tr}
+\renewcommand{\top}[0]{\ensuremath{\mathsf{T}}}
+\newcommand{\Hop}[0]{\ensuremath{\mathsf{H}}}
+
+%% Optimization %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+%% Complex operators %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator{\Imi}{i}
+\DeclareMathOperator{\Imj}{j}
+
+%% Special symbols %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\e}[0]{\ensuremath{\mathsf{e}}}
+
+%% Statistics and probability %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\var}{var}
+\newcommand{\Fisher}[0]{\ensuremath{\mathcal{I}}}   % Fisher information matrix
+
+%% Calculus %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\dop}[0]{\ensuremath{\mathrm{d}}}       % SI-style derivative
+\newcommand{\dt}[0]{\ensuremath{\dop t}}            % Shorthand for dt
+
+%% Number sets %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\R}[0]{\ensuremath{\mathbb{R}}}         % Real numbers
+
+%% Coordinate systems %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\cG}[0]{\ensuremath{\mathsf{G}}}        % Global
+\newcommand{\cP}[0]{\ensuremath{\mathsf{P}}}        % Person (local)
+\newcommand{\cI}[0]{\ensuremath{\mathsf{I}}}        % Inertial
+\newcommand{\cL}[0]{\ensuremath{\mathsf{L}}}        % General local
+\newcommand{\cx}[0]{\ensuremath{\mathsf{x}}}        % x-coordinate
+\newcommand{\cy}[0]{\ensuremath{\mathsf{y}}}        % y-coordinate
+\newcommand{\cz}[0]{\ensuremath{\mathsf{z}}}        % z-coordinate
+
+%% Other math operators %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator{\atan2}{atan2}
+\DeclareMathOperator{\asin}{asin}
+
+%% Hamiltonian stuff %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\qtmul}[0]{\ensuremath{\odot}}
+
+%% Special functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\besselI}[0]{\ensuremath{\mathcal{I}}}
+
+%% Ordo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\BigO}[0]{\ensuremath{\mathcal{O}}}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% EOF
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
