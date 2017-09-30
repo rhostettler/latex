@@ -1,67 +1,67 @@
-%% Parallel Publishing Toolbox %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% This provides some simple commands for parallel-publishing scientific papers
-%% according to the rules set out by the publishers. That is, it provides an 
-%% easy way to create a cover page which includes the necessary copyright and
-%% citation information such that the paper can be posted on a personal or
-%% institutional homepage.
-%%
-%% Package options:
-%%   hyperref   Enables hyperref
-%% 
-%% parapub.sty -- Version 2.0 -- 2016-10-12
-%% Roland Hostettler
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Parallel Publishing Toolbox
+% ===========================
+% The parapub class provides an easy way of creating cover pages for parallel
+% publishing of scientific articles. The cover page includes the necessary 
+% copyright and citation information such that the paper can be posted on a 
+% personal or institutional homepage.
+%
+% Package options:
+%   hyperref   Enables hyperref
+% 
+% parapub.sty -- Version 3.0 -- 2017-09-30 -- Roland Hostettler
 
-%% Identify ourselves %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Class & options definitions
+% ---------------------------
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{parapub}[2016/10/12 v2.0 Parallel Publishing Toolbox]
+\ProvidesClass{parapub}[2017/09/30 v3.0 Parallel Publishing Toolbox]
 
-%% Mandatory dependencies %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtoggle{hyperref}
+\togglefalse{hyperref}
+\DeclareOption{hyperref}{\toggletrue{hyperref}}
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
+\ProcessOptions
+
+% Dependencies
+% ------------
 \RequirePackage{keyval}    % Used for key-value pairs in \parapubsetup
 \RequirePackage{parskip}   % Neat paragraph skipping
 \RequirePackage{microtype} % Improved linebreaks
 \RequirePackage{etoolbox}  % Used for if/else constructs
 \RequirePackage{pdfpages}  % Used to include the article PDF
-\RequirePackage{bibentry}  % For the full citation
+\RequirePackage{bibentry}  % For the citation
 
-%% Package Options %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Should we use hyperref? Disabled by default, enabled by using the hyperref 
-% package option
-\newtoggle{hyperref}
-\togglefalse{hyperref}
-\DeclareOption{hyperref}{\toggletrue{hyperref}}
-
-% Process Options
-\ProcessOptions
-
-
-%% Cover page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% These commands are used to create the frontpage that is prepended to the. It
-%% includes the paper title, authors, a full citation, copyright notice, DOI, 
-%% and citation instructions.
-%%
-%% There are two commands to be used. The first one is \parapubsetup which is
-%% preferably called in the preamble of the document. It sets the paper 
-%% information (except for the title and author which are set with the default 
-%% LaTeX \title and \author commands). \papersetup requires the following 
-%% options:
-%%
-%%  journal     The journal (or conference) where the paper is (to be) 
-%%              published,
-%%  citationkey The key of the citation for the paper in the bibliography for
-%%              including a full citation on the cover page,
-%%  doi         The digital object identifier of the paper (accepted/published)
-%%  copyright   A copyright notice, either your own or a predefined one (see 
-%%              below),
-%%
-%% and one of
-%%   
-%%  preprint    for preprints,
-%%  accepted    for accepted papers,
-%%  published   for published papers.
-%%
-%% The second command is '\makecoverpage'. This will typeset the complete cover
-%% page.
+% Cover Page
+% ----------
+% The cover page is created by simply invoking the \article command. 
+% 
+% DESCRIBE OPTIONS HERE
+% 
+% These commands are used to create the frontpage that is prepended to the. It
+% includes the paper title, authors, a full citation, copyright notice, DOI, 
+% and citation instructions.
+%
+% There are two commands to be used. The first one is \parapubsetup which is
+% preferably called in the preamble of the document. It sets the paper 
+% information (except for the title and author which are set with the default 
+% LaTeX \title and \author commands). \papersetup requires the following 
+% options:
+%
+%  journal     The journal (or conference) where the paper is (to be) 
+%              published,
+%  citationkey The key of the citation for the paper in the bibliography for
+%              including a full citation on the cover page,
+%  doi         The digital object identifier of the paper (accepted/published)
+%  copyright   A copyright notice, either your own or a predefined one (see 
+%              below),
+%
+% and one of
+%   
+%  preprint    for preprints,
+%  accepted    for accepted papers,
+%  published   for published papers.
+%
+% The second command is '\makecoverpage'. This will typeset the complete cover
+% page.
 
 % Define the keys
 % Paper journal/conference
@@ -153,8 +153,8 @@
 	\newcommand{\href}[2]{#2}
 }
 
-
-%% Predefined Copyright Disclaimers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Copyright Disclaimers
+% ---------------------
 % IEEE standard copyright disclaimer
 \newcommand{\IEEECopyrightNotice}[0]{%
 	Copyright \copyright\ \the\year\ IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for resale or redistribution to servers or lists, or reuse of any copyrighted component of this work in other works.
