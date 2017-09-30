@@ -4,8 +4,8 @@
 
 # Installs class and style files
 function install_latex() {
+    echo -n "Installing ${1} class and style files to ${DESTDIR}..."
     DESTDIR="${TEXMFHOME}/tex/latex/"
-    echo -n "Installing ${1} to ${DESTDIR}..."
     for FILE in "${1}"/*.{sty,cls}; do
         if [ -f "${FILE}" ]; then
             cp "${FILE}" "${DESTDIR}"
@@ -15,24 +15,30 @@ function install_latex() {
 }
 
 # Installs template files
-function install_template(){
-    echo "INSTALL TEMPLATE: " ${1}
+function install_templates(){
+    if [ -d "${1}/Template" ]; then
+        DESTDIR=~/"Templates/LaTeX"
+        echo -n "Installing ${1} templates to ${DESTDIR}..."
+        if [ ! -d "${DESTDIR}" ]; then
+            mkdir -p "${DESTDIR}"
+        fi
+        for FILE in "${1}/Template/"*.tex; do
+            if [ -f "${FILE}" ]; then
+                cp "${FILE}" "${DESTDIR}"
+            fi
+        done
+        echo "done."
+    fi
 }
 
 # Packages to install
 PACKAGES=(
     "parapub"
-    "test"
-#    "rhsleek"
-#    "ltusimple"
 )
-
-# Directory to install templates to
-TEMPLATEDIR="~/Templates/LaTeX"
 
 # Determine install path and check if we can write to it
 if [ `uname -s` == "Darwin" ]; then
-    TEXMFHOME="~/Library/texmf/"
+    TEXMFHOME=~/"Library/texmf/"
 else
     : "${TEXMFHOME:?TEXMFHOME not set. Please see README for instructions.}"
 fi
@@ -42,7 +48,7 @@ fi
 
 # Install packages & templates (if they exist)
 for PKG in ${PACKAGES[@]}; do
-#    install_latex ${PKG}
-    install_template ${PKG}
+    install_latex ${PKG}
+    install_templates ${PKG}
 done
 
