@@ -34,6 +34,7 @@ function install_templates(){
 # Packages to install
 PACKAGES=(
     "parapub"
+    "mathsym"
 )
 
 # Determine install path and check if we can write to it
