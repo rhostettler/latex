@@ -203,6 +203,6 @@
 
 % ISIF
 \newcommand{\ISIFCopyrightNotice}[0]{%
-    Copyright \the\year ISIF.
+    Copyright \the\year\ ISIF.
 }
 
