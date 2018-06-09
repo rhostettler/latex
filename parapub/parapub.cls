@@ -201,3 +201,8 @@
     published by EURASIP.
 }
 
+% ISIF
+\newcommand{\ISIFCopyrightNotice}[0]{%
+    Copyright \the\year ISIF.
+}
+
