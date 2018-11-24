@@ -1,22 +1,21 @@
-LaTeX Collection
-================
-This is a collection of LaTeX style files and classes for all kinds of purposes. Brief descriptions of the different packages and classes are given below; for a detailed description, have a look at the documentation, source, or template files.
+# LaTeX Bits'n'Pieces
+This is a collection of LaTeX classes, packages, and templates for all kinds of purposes. Brief descriptions of the different packages and classes are given below; for a detailed description, have a look at the documentation, source, or template files.
 
-**mathsym:** The mathsym package includes a bunch of commonly used mathematical symbols, operators, etc. that are not defined in any of the major mathematics package (e.g. amssym).
+**mathsym:** Commonly used mathematical symbols, operators, etc. that are not defined in any of the major mathematics package (e.g., amssym).
 
-**parapub:** A simple class for easily creating front pages for parallel publishing of scientific articles (e.g. author's copies on personal homepages, on [arXiv.org](https://arxiv.org/), etc.) that includes the necessary copyright information. Check the [SHERPA/RoMEO catalog](http://www.sherpa.ac.uk/romeo/index.php) for information on copyright policies of different publishers.
-
-**rhsleek:** A plain and sleek presentation template (deprecated).
-
-**ltusimple:** A simple LTU-branded presentation template (deprecated).
+**parapub:** A class for creating front pages for parallel publishing of scientific articles (e.g., authors' copies on personal homepages, on [arXiv.org](https://arxiv.org/), etc.) that includes the necessary copyright information. Check the [SHERPA/RoMEO catalog](http://www.sherpa.ac.uk/romeo/index.php) for information on copyright policies of different publishers.
 
 
-Installation
-------------
-**Linux & MacOS X:** Run the *install.sh* Bash script included in the repository. This will:
+## Installation
+Install using the `install.sh` script (requires `$TEXMFHOME` to be set). This will:
 
-1. Install all class and style files to the $TEXMFHOME directory
-2. Install all the templates (where applicable) to ~/Templates/LaTeX
+1. Create symlinks to the templates in the `template` directory in `$HOME/Templates/LaTeX`,
+2. Create symlinks to the classes in the `classes` directory in `$TEXMFHOME/tex/latex`,
+3. Create symlinks to the packages in the `packages` directory in `$TEXMFHOME/tex/latex`.
 
-**Windows:** Sorry, I can't help you here.
+On a fresh installation, run `bootstrap.sh` instead. This will:
+
+1. Create the folders `.local/share/texmf/tex/latex` and `.local/share/texmf/bibtex/bib`,
+2. Setup the `$TEXMFHOME` variable in `$HOME/.profile`,
+3. Run `install.sh` as above.
 
