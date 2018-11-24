@@ -1,0 +1,71 @@
+\documentclass[tikz]{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\begin{document}
+\begin{tikzpicture}
+    \begin{axis}[
+	    width	= 10cm,
+	    height	= 6.25cm,
+	    xlabel	= {$t \; / \; \si{s}$},
+	    ylabel	= {$y_a \; / \; \si{m/s^2}$},
+	    xmin = 15,
+	    xmax = 40,
+	    ymin = -15,
+	    ymax = 15,
+        legend style = {
+            font = \footnotesize,
+        },
+        legend cell align = left,
+        legend pos = north west,
+    ]
+
+    \addplot[
+        mark = none,
+        draw = blue,
+        solid,
+        line width = 0.5pt,
+        each nth point = 10,
+        smooth,
+        unbounded coords = jump
+    ]
+    table[
+	    x = t,
+	    y = ya1,
+    ]{data/ex_walking.txt};
+    \addlegendentry{$y_{a,x}$}
+
+    \addplot[
+        mark = none,
+        draw = green!50!black,
+        solid,
+        line width = 0.5pt,
+        each nth point = 10,
+        smooth,
+        unbounded coords = jump
+    ]
+    table[
+	    x = t,
+	    y = ya2,
+    ]{data/ex_walking.txt};
+    \addlegendentry{$y_{a,y}$}
+	
+\addplot[
+        mark = none,
+        draw = red,
+        solid,
+        line width = 0.5pt,
+        each nth point = 10,
+        smooth,
+        unbounded coords = jump
+    ]
+    table[
+	    x = t,
+	    y = ya3,
+    ]{data/ex_walking.txt};
+    \addlegendentry{$y_{a,z}$}
+
+    \end{axis}
+\end{tikzpicture}
+\end{document}
+

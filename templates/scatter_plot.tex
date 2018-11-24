@@ -1,0 +1,33 @@
+\begin{tikzpicture}
+    \begin{axis}[
+	    width	= <width>,
+	    height	= <height>,
+	    xlabel	= {<x label>},
+	    ylabel	= {<y label>},
+	    xmin = <xmin>,
+	    xmax = <xmax>,
+	    ymin = <ymin>,
+	    ymax = <ymax>,
+    ]
+
+	\addplot[
+		scatter,
+		scatter/use mapped color = {blue},
+		only marks,
+		mark options	=
+		{
+			scale 		= 1,
+			draw		= blue,
+			fill		= blue,
+		},
+		mark = *,
+	]
+	table[
+		x = <x series>,
+		y = <y series>,
+	]{<data file>};
+	\addlegendentry{}
+    
+    \end{axis}
+\end{tikzpicture}
+

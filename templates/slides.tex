@@ -1,0 +1,82 @@
+\documentclass[12pt,t]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+
+%% Beamer options
+% Default template w/o navigation symbols
+\usetheme{default}
+\beamertemplatenavigationsymbolsempty
+
+% Fonts
+\usepackage[T1]{fontenc}
+\usepackage{tgadventor}     % sans-font
+\usepackage{tgpagella}      % serif-font
+\usepackage{textcomp}
+\usefonttheme{professionalfonts}
+\usefonttheme[onlymath]{serif}
+
+\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}   % Reduces size
+\setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}   % of sub-items
+
+\setbeamerfont{title}{series=\bfseries}
+\setbeamerfont{block title}{series=\bfseries}
+\setbeamerfont{subtitle}{series=\normalfont}
+\setbeamerfont{frametitle}{series=\bfseries}
+
+% Colors
+\definecolor{lightgray}{RGB}{127,127,127}
+\setbeamercolor{titlelike}{fg=black}
+\setbeamercolor{subtitle}{}
+\setbeamercolor{block title}{fg=black}
+\setbeamercolor{institute}{fg=gray}
+\setbeamercolor{item}{fg=gray}      % Bullets
+\setbeamercolor{subitem}{fg=gray}   % Bullets of sub-items
+
+% Uncovering
+\setbeamercovered{transparent}
+
+% Footer: <Date> - <Slide No.> / <No. of Slides> - <Author(s)>
+\setbeamertemplate{footline}[text line]{%
+    \parbox{\linewidth}{%
+        \vspace*{-2em}%
+        \color{gray}
+        \insertdate%
+        \hfill%
+        \insertframenumber~/~\inserttotalframenumber%
+        \hfill%
+        \insertshortauthor%
+    }%
+}
+
+%% Title, etc.
+\title{ABC}
+\author[Foo Bar]{Foo Bar}
+\institute{Fooniversity}
+\date{\today}
+
+%% Content
+\begin{document}
+
+\begin{frame}[plain]
+    \titlepage
+    \addtocounter{framenumber}{-1}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Hello World}
+
+    Hello World:
+    %
+    \begin{itemize}[<+->]
+        \item Hello World
+        \item Hello World
+        \item Hello World
+    \end{itemize}
+
+    \begin{equation}
+        E = m c^2
+    \end{equation}
+\end{frame}
+
+\end{document}
+
