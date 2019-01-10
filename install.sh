@@ -14,6 +14,21 @@ function install_latex() {
     done
 }
 
+
+# Install bibliographies
+function install_bibtex(){
+    if [ -d "bibtex" ]; then
+        CURDIR=`pwd`
+        DESTDIR="${TEXMFHOME}/bibtex/bib/"
+        echo "Installing bibliographies to ${DESTDIR}..."
+        for FILE in "bibtex"/*.bib; do
+            if [ -f "${FILE}" ]; then
+                ln -s "${CURDIR}/${FILE}" "${DESTDIR}"
+            fi
+        done
+    fi
+}
+
 # Installs template files
 function install_templates(){
     if [ -d "templates" ]; then
@@ -44,5 +59,6 @@ fi
 # Install everything
 install_latex classes
 install_latex packages
+install_bibtex
 install_templates
 

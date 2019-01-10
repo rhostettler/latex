@@ -5,6 +5,7 @@
 # Set up paths
 echo "Setting up local texmf directories..."
 TEXMFHOME="${HOME}/.local/share/texmf"
+export $TEXMFHOME
 mkdir -p "${TEXMFHOME}/tex/latex"
 mkdir -p "${TEXMFHOME}/bibtex/bib"
 
