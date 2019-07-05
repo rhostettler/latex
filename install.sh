@@ -46,11 +46,26 @@ function install_templates(){
     fi
 }
 
-# Determine install path and check if we can write to it
+
+
+# TEXMFHOME checks:
+# * Define it if on MacOS
+# * Check if it is set if on Linux; if not, assume that this is a new install 
+#   and create the necessary directories.
 if [ `uname -s` == "Darwin" ]; then
     TEXMFHOME=~/"Library/texmf/"
 else
-    : "${TEXMFHOME:?TEXMFHOME not set. Please see README.md for instructions.}"
+    if [ -z "${TEXMFHOME+x}" ]; then
+        echo "TEXMFHOME not set, assuming a fresh install..."
+        TEXMFHOME="${HOME}/.local/share/texmf"
+        export TEXMFHOME
+    fi
+    if [ ! -d "${TEXMFHOME}/tex/latex" ]; then
+        mkdir -p "${TEXMFHOME}/tex/latex"
+    fi
+    if [ ! -d "${TEXMFHOME}/bibtex/bib" ]; then
+        mkdir -p "${TEXMFHOME}/bibtex/bib"
+    fi
 fi
 if [ ! -w "${TEXMFHOME}" ]; then
     >&2 echo "ERROR: Cannot write to ${TEXMFHOME}."

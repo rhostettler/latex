@@ -5,6 +5,8 @@ This is a collection of LaTeX classes, packages, and templates for all kinds of 
 
 **parapub:** A class for creating front pages for parallel publishing of scientific articles (e.g., authors' copies on personal homepages, on [arXiv.org](https://arxiv.org/), etc.) that includes the necessary copyright information. Check the [SHERPA/RoMEO catalog](http://www.sherpa.ac.uk/romeo/index.php) for information on copyright policies of different publishers.
 
+**pgfdefaults:** Deprecated defaults for PGF. *Will be updated/replaced at some point*.
+
 
 ## Installation
 Install using the `install.sh` script (requires `$TEXMFHOME` to be set). This will:
@@ -13,9 +15,9 @@ Install using the `install.sh` script (requires `$TEXMFHOME` to be set). This wi
 2. Create symlinks to the classes in the `classes` directory in `$TEXMFHOME/tex/latex`,
 3. Create symlinks to the packages in the `packages` directory in `$TEXMFHOME/tex/latex`.
 
-On a fresh installation, run `bootstrap.sh` instead. This will:
+On a fresh installation, you should:
 
-1. Create the folders `.local/share/texmf/tex/latex` and `.local/share/texmf/bibtex/bib`,
+1. Create the folders `$HOME/.local/share/texmf/tex/latex` and `$HOME/.local/share/texmf/bibtex/bib`,
 2. Setup the `$TEXMFHOME` variable in `$HOME/.profile`,
 3. Run `install.sh` as above.
 

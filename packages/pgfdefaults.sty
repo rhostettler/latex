@@ -1,0 +1,105 @@
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Roland's Default PGFPLOTS Settings
+% ==================================
+% 
+% pgfdefaults.sty -- Version 1.0 -- 2017-06-15
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% TODO:
+%   * Add commands/package options to select default color scheme, etc.
+
+% Package preamble %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{pgfdefaults}[2017/05/15 v1.0 Roland's pgfplots default settings]
+
+% Dependencies
+\RequirePackage{xcolor,tikz,pgfplots}
+\RequirePackage{suffix}
+
+% Process package options
+\ProcessOptions
+
+
+% PGF settings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\pgfplotsset{
+    compat=newest,
+    tick scale binop=\times,
+}
+%\usepgfplotslibrary{external}
+%\tikzexternalize[prefix=Figures/Cache/]
+
+\pgfplotsset{
+    every mark/.append style = {
+        none,
+    },
+    %
+    every axis plot/.append style = {
+        line width = 1pt,
+    },
+    %
+    every axis/.append style = {
+        grid = major,
+        major grid style = {dotted},
+%        legend pos = north west
+    },
+    every axis legend/.append style = {
+        font = \footnotesize
+    },
+    yticklabel style = {
+        text width = 2em,
+        align = right,
+        font = \footnotesize,
+        xshift = 0.5ex,
+    },
+    %
+    xticklabel style = {
+        font = \footnotesize,
+%        yshift = 0.5ex,
+    },
+%    every x tick label/.append style = {
+%        font = \footnotesize,
+%        yshift = 0.5ex
+%    }
+    %
+    every axis label/.append style = {
+        font = \footnotesize
+    },
+}
+ 
+\colorlet{l2color}{green!50!black}
+\colorlet{l1color}{blue}
+\colorlet{l3color}{red}
+
+% Color and line schemes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The color schemes are a subset of the color brewer schemes, see
+% http://colorbrewer2.org
+
+% Set 1, 5 classes, qualitative
+\definecolor{cb_s1c5_1}{RGB}{228,26,28}
+\definecolor{cb_s1c5_2}{RGB}{55,126,184}
+\definecolor{cb_s1c5_3}{RGB}{77,175,74}
+\definecolor{cb_s1c5_4}{RGB}{152,78,163}
+\definecolor{cb_s1c5_5}{RGB}{255,127,0}
+
+% TODO: Update
+\pgfplotscreateplotcyclelist{brewer_s1c5}{%
+    {cb_s1c5_1,solid},
+    {cb_s1c5_2,dashed},
+    {cb_s1c5_3,dotted},
+    {cb_s1c5_4,dashdotted},
+    {cb_s1c5_5,dashdotdotted}%
+}
+
+\pgfplotsset{
+    cycle list name = {brewer_s1c5}
+}
+
+% Miscellaneous %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Defines a \newlength* command which takes a default length
+\WithSuffix\newcommand\newlength*[2]{%
+    \newlength{#1}%
+    \setlength{#1}{#2}%
+}
+
